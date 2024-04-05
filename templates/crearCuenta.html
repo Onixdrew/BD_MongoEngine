@@ -1,0 +1,53 @@
+{% extends 'index.html' %} {% block encabezado %} {%include 'encabezado.html'%}
+{% endblock %} {% block contenido %}
+
+<form
+  method="POST"
+  id="frmproducto"
+  action="/crearUsuario"
+  enctype="multipart/form-data"
+  class="w-50 mx-auto border border-black p-4 bg-light bg-gradient rounded"
+> 
+  <h1 class="text-center mb-4">Crear cuenta</h1>
+  
+  <div class="form-group">
+    <label for="codigo">Nombre y apellido:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="nombre"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="nombre">Correo:</label>
+    <input
+      type="email"
+      class="form-control"
+      name="correo"
+      id="idCorreo"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="precio">Contraseña:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="contraseña"
+      id="idPrecio"
+      required
+    />
+  </div>
+ 
+  
+  <div class="mt-4 ">
+    <button type="submit"   class="btn btn-success me-5">
+      Crear
+    </button>
+    <a href='/'><button type="button" class="btn btn-warning">Cancelar</button></a>
+  </div>
+  <input type="hidden" name="inputHidden" id="idHidden">
+</form>
+
+{% endblock %}

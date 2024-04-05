@@ -1,0 +1,87 @@
+{% extends 'index.html' %} {% block encabezado %} {%include 'encabezado.html'%}
+{% endblock %} {% block contenido %}
+
+<form
+  method="post"
+  id="frmproducto"
+  action="/editar"
+  enctype="multipart/form-data"
+> 
+  <h1>{{mensaje}}</h1>
+  
+  <div class="form-group">
+    <label for="codigo">código:</label>
+    <input
+      type="number"
+      class="form-control"
+      name="codigo"
+      value={{productos['codigo']}}
+      id="idCodigo"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="nombre">Nombre:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="nombre"
+      value={{productos['nombre']}}
+      id="idNombre"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="precio">Precio:</label>
+    <input
+      type="number"
+      class="form-control"
+      name="precio"
+      value={{productos['precio']}}
+      id="idPrecio"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="categoria">Categoria:</label>
+    <select
+      type="text"
+      name="categoria"
+      class="form-control"
+      value={{productos['categoria']}}
+      id="idCategoria"
+      required
+    >
+      <option value="">{{queryCategoria['nombre']}}</option>
+      {% for categoria in listaCategorias %}
+      <option value="{{categoria['_id']}}">{{categoria['nombre']}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="foto">Foto (jpg):</label>
+    <input
+      type="file"
+      name="fileFoto"
+      class="form-control"
+      id="idFoto"
+
+      onchange=" visualizarFoto(event)"
+      
+    />
+  </div>
+  <div id="imagenProducto" >
+    <img src="../static/imagenes/" alt="" />
+  </div>
+  
+
+  <div class="">
+    <button type="submit"   class="btn btn-primary">
+      Actualizar
+    </button>
+    <a href='/agregarProducto'><button type="button" class="btn btn-primary">Cancelar</button></a>
+  </div>
+  <input type="hidden" name="inputHidden" id="idHidden">
+</form>
+
+{% endblock %}

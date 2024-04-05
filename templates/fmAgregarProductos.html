@@ -1,0 +1,78 @@
+{% extends 'index.html' %} {% block encabezado %} {%include 'encabezado.html'%}
+{% endblock %} {% block contenido %}
+<form
+  method="post"
+  id="frmproducto"
+  action="/agregarProducto"
+  enctype="multipart/form-data"
+> 
+  <p class='text-center text-success'>{{mensaje}}</p>
+  <div class="form-group">
+    <label for="codigo">código:</label>
+    <input
+      type="number"
+      class="form-control"
+      name="codigo"
+      id="idCodigo"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="nombre">Nombre:</label>
+    <input
+      type="text"
+      class="form-control"
+      name="nombre"
+      id="idNombre"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="precio">Precio:</label>
+    <input
+      type="number"
+      class="form-control"
+      name="precio"
+      id="idPrecio"
+      required
+    />
+  </div>
+  <div class="form-group">
+    <label for="categoria">Categoria:</label>
+    <select
+      type="text"
+      name="categoria"
+      class="form-control"
+      id="idCategoria"
+      required
+    >
+      <option value="">seleccione la categoria</option>
+      {% for categoria in categorias %}
+      <option value="{{categoria['_id']}}">{{categoria['nombre']}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="foto">Foto (jpg):</label>
+    <input
+      type="file"
+      name="fileFoto"
+      class="form-control"
+      id="idFoto"
+      onchange=" visualizarFoto(event)"
+      
+    />
+  </div>
+  <div id="imagenProducto" >
+    <img src="" alt="" />
+  </div>
+
+  <div class="">
+    <button type="submit"  class="btn btn-primary">
+      Agregar
+    </button>
+    <a href='/agregarProducto' id='btnCancel'><button type="button" class="btn btn-primary">Cancelar</button></a>
+  </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'index.html' %} {% block encabezado %} {%include 'encabezado.html'%}
+
+
+{% endblock %} {% block contenido %}
+<script>
+  {% if session.get('salir') %}
+      alert("¡Has cerrado sesión con éxito!");
+      {% endif %}
+      {% if session.pop('salir', None) %}
+      setTimeout(function(){ window.location.href = "/"; }, 3000); // Redireccionar después de 3 segundos
+  {% endif %}
+</script>
+
+<h1 class="text-center text-danger">{{mensaje2}}</h1>
+<h1 class="text-center text-danger">{{mensaje3}}</h1>
+<h1 class="text-center text-danger">{{mensajeUser}}</h1>
+<section class="gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <form action='/datosLogin' method="post" class="card bg-dark text-white" style="border-radius: 1rem">
+          <div class="card-body p-5 text-center">
+            <div class="mb-md-5 mt-md-4 pb-5" >
+              <h2 class="fw-bold mb-2 text-uppercase">Ingresar</h2>
+              <p class="text-white-50 mb-5">
+                Digita tu correo y contraseña!
+              </p>
+
+              <div class="form-outline form-white mb-4">
+                <input
+                  type="email"
+                  id="typeEmailX"
+                  name="correo"
+                  class="form-control form-control-lg"
+                  
+                />
+                <label class="form-label" for="typeEmailX">Correo</label>
+              </div>
+
+              <div class="form-outline form-white mb-4">
+                <input
+                  type="password"
+                  id="typePasswordX"
+                  name="contraseña"
+                  class="form-control form-control-lg"
+                  
+                />
+                <label class="form-label" for="typePasswordX">Contraseña</label>
+              </div>
+
+              <p class="small mb-5 pb-lg-2">
+                <a class="text-white-50" href="#!">Olvidaste tu contraseña?</a>
+              </p>
+
+              <button class="btn btn-outline-light btn-lg px-5" type="submit">
+                Entrar
+              </button>
+
+              <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                <a href="https://www.facebook.com/?locale=es_LA" class="text-white"
+                  ><i class="fab fa-facebook-f fa-lg"></i
+                ></a>
+                <a href="https://twitter.com/" class="text-white"
+                  ><i class="fab fa-twitter fa-lg mx-4 px-2"></i
+                ></a>
+                <a href="https://www.google.com/intl/es/account/about/" class="text-white"
+                  ><i class="fab fa-google fa-lg"></i
+                ></a>
+              </div>
+            </div>
+
+            <div>
+              <p class="mb-0">
+                No tienes cuenta?
+                <a href="/mostrarFormLogin" class="text-white-50 fw-bold">Crear cuenta</a>
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %} {% block piePagina %} {%include 'piePagina.html'%} {% endblock %}
