@@ -4,6 +4,10 @@ import mongoengine
 # crear aplicación
 app = Flask(__name__)
 
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'GestionProductos',
+}
+
 app.config["UPLOAD_FOLDER"] = "./static/imagenes"
 
 

@@ -39,7 +39,7 @@ def inicio():
 
 #///////////////////Validar Datos del Login/////////////////////////
 
-@app.route('/datosLogin', methods=["POST"])
+@app.route('/datosLogin', methods=["POST","GET"])
 def inicioLogin():
     
     #/////////// USER ///////////
@@ -112,6 +112,8 @@ def inicioLogin():
     return redirect(url_for('inicio', mensaje2=mensaje2))
 
 
+
+
 #//////////////////// Crear cuenta ///////////////////
 
 @app.route('/mostrarFormLogin', methods=["GET","POST"])
@@ -153,7 +155,7 @@ def vistaAgregarProducto():
         return redirect(url_for("inicio",mensaje3=mensaje3))  
     
 
-
+import io
 
 # ///////////////// agregarProducto ////////////////////////////////////////
 
@@ -164,13 +166,19 @@ def agregarProducto():
         estado=False
         listCategorias=categorias.objects()
         try:
+           
             codigo =int(request.form["codigo"]) 
             nombre = request.form["nombre"]
             precio = int(request.form["precio"])
             idCategoria = request.form["categoria"]
             foto =request.files["fileFoto"]
+            # categ=categorias.objects(nombre=idCategoria).first()
+            # erorr
             
-            nuevoProducto=productos(codigo=codigo,nombre=nombre,precio=precio,categoria=ObjectId(idCategoria) )
+            # Leer la imagen desde el archivo cargado
+            imagenLeida = foto.read()
+
+            
             
             Productos=productos.objects()
             pBusquedad=productos.objects(codigo=codigo).first()
@@ -179,17 +187,18 @@ def agregarProducto():
                 mensaje = 'Ya existe un producto con este código.'
                 
             else:
+                nuevoProducto=productos(codigo=codigo,nombre=nombre,precio=precio,categoria=idCategoria,foto=imagenLeida  )
                 resultado= nuevoProducto.save()
+                mensaje='Producto agregado correctamentre.'
                 
-                if (resultado.acknowledged):
-                    idProducto= ObjectId(resultado.inserted_id)
+                if (resultado):
+                    idProducto= ObjectId(resultado.id)
                     nombreFoto=f"{idProducto}.jpg"
                     # esto guarda la foto en el disco
                     foto.save(os.path.join(app.config["UPLOAD_FOLDER"], nombreFoto))
-                    estado=True
-                    mensaje='Producto agregado correctamentre.'
                 else:
                     mensaje='problemas al agregar el producto'
+                    
                
             if Productos:
                 mensaje='Tus productos'
@@ -197,7 +206,7 @@ def agregarProducto():
                 mensaje='No tienes productos'
                 
                 
-            return render_template('listarProductos.html',estado=estado, mensaje= mensaje, Productos=Productos, listCategorias=listCategorias)
+            return render_template('listarProductos.html', estado=estado, mensaje= mensaje, Productos=Productos, listCategorias=listCategorias)
         except PyMongoError as error:
             mensaje= error
     else:
@@ -213,15 +222,15 @@ def cosultarPorCodigo(codigoP):
         estado=False
         mensaje=None
         producto=None
-        conver=int(codigoP)
+        # conver=int(codigoP)
         try:
-            ResultadoProducto= productos.objects(codigo=conver).first()
+            ResultadoProducto= productos.objects(codigo=codigoP).first()
+            # queryCategoria=categorias.objects(id=ResultadoProducto.categoria).first()
+            listaCategorias=categorias.objects()
     
         except PyMongoError as error:
             mensaje=error
-        queryCategoria=categorias.objects(_id=ResultadoProducto.categoria).first()
-        listaCategorias=categorias.objects()
-        return render_template('editarProducto.html', productos=ResultadoProducto,queryCategoria=queryCategoria, listaCategorias=listaCategorias )
+        return render_template('editarProducto.html', productos=ResultadoProducto, listaCategorias=listaCategorias )
     else:
         mensaje3='Metodo invalido, por favor inicie sesión'
         return redirect(url_for("inicio",mensaje3=mensaje3))
@@ -242,24 +251,26 @@ def editar():
             foto =request.files["fileFoto"]
             # inputHidden= ObjectId(request.files["inputHidden"])
             
-            producto={
-                # uso ("$set" ), para no poner (set__) en update_one(set__(campo a actualizar))
-                "$set":{
-                    'codigo':codigo,
-                    'nombre':nombre,
-                    'precio':precio,
-                    'categoria':ObjectId(idCategoria)
-                }
-            }
+            # producto={
+            #     # uso ("$set" ), para no poner (set__) en update_one(set__(campo a actualizar))
+            #     "$set":{
+            #         'codigo':codigo,
+            #         'nombre':nombre,
+            #         'precio':precio,
+            #         'categoria':ObjectId(idCategoria)
+            #     }
+            # }
             
             #NOTA: Convertir un JSON  en un diccionario de Python
             # actualizar_producto = json.loads(archivo json)
             
             # actualizando la base de datos con el id
                                                             # se usa ** cuando se pasa un JSON
-            resultado= productos.objects(codigo=codigo).update_one(**producto)
+            resultado= productos.objects(codigo=codigo).first()
+            resultado.update(set__codigo=codigo,set__nombre=nombre,set__precio=precio,set__categoria=ObjectId(idCategoria),)
+
             
-            if (resultado.acknowledged):
+            if (resultado):
                 if(foto):
                     # nombreFoto= f'{inputHidden}.jpg'
                     foto.save(os.path.join(app.config["UPLOAD_FOLDER"]))

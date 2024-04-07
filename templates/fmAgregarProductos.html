@@ -48,7 +48,7 @@
     >
       <option value="">seleccione la categoria</option>
       {% for categoria in categorias %}
-      <option value="{{categoria['_id']}}">{{categoria['nombre']}}</option>
+      <option value="{{categoria.id}}">{{categoria.nombre}}</option>
       {% endfor %}
     </select>
   </div>
@@ -59,13 +59,11 @@
       name="fileFoto"
       class="form-control"
       id="idFoto"
-      onchange=" visualizarFoto(event)"
+      accept="image/*"
       
     />
   </div>
-  <div id="imagenProducto" >
-    <img src="" alt="" />
-  </div>
+  
 
   <div class="">
     <button type="submit"  class="btn btn-primary">

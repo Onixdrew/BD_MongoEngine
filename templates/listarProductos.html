@@ -1,6 +1,7 @@
 {% extends 'index.html' %} {% block encabezado %} {%include 'encabezado.html'%}
 <p class="text-center  mt-5 text-success mb-5 fs-4">{{mensaje}}</p>
 <p class="text-center  mt-5 text-success mb-4">{{mensaje2}}</p>
+
 {% endblock %} {% block contenido %}
 <div >
   <a href="/vistaAgregarProducto">
@@ -42,8 +43,11 @@
         <td>{{p.codigo}}</td>
         <td>{{p.nombre}}</td>
         <td>{{p.precio}}</td>
-
         <td>{{p.categoria}}</td>
+        
+       
+
+       
         <td>
           <img
             src="../static/imagenes/{{p._id}}.jpg"
@@ -53,7 +57,7 @@
           />
         </td>
         <td>
-          <a href="/consultar/{{p['codigo']}}" ><i class="fa fa-edit text-warning" title="editar" ></i></a>
+          <a href="/consultar/{{p.codigo}}" ><i class="fa fa-edit text-warning" title="editar" ></i></a>
           <a href="/eliminar/{{p['codigo']}}" onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
             <i class="fa fa-trash text-danger" title="eliminar"></i>
           </a>

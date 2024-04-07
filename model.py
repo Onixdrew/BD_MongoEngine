@@ -1,4 +1,4 @@
-from mongoengine import Document, ReferenceField, StringField, IntField,EmailField
+from mongoengine import Document, ReferenceField, StringField,BinaryField, IntField,EmailField
 
 class usuarios(Document):
     nombre=StringField(max_length=50)
@@ -13,4 +13,6 @@ class productos(Document):
     nombre=StringField(max_length=50)
     precio=IntField()
     categoria=ReferenceField(categorias)
+    # convierte la imagen a binario
+    foto = BinaryField()
     

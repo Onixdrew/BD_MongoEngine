@@ -15,7 +15,7 @@
       type="number"
       class="form-control"
       name="codigo"
-      value={{productos['codigo']}}
+      value={{productos.codigo}}
       id="idCodigo"
       required
     />
@@ -26,7 +26,7 @@
       type="text"
       class="form-control"
       name="nombre"
-      value={{productos['nombre']}}
+      value={{productos.nombre}}
       id="idNombre"
       required
     />
@@ -37,7 +37,7 @@
       type="number"
       class="form-control"
       name="precio"
-      value={{productos['precio']}}
+      value={{productos.precio}}
       id="idPrecio"
       required
     />
@@ -48,13 +48,13 @@
       type="text"
       name="categoria"
       class="form-control"
-      value={{productos['categoria']}}
+      value={{productos.categoria}}
       id="idCategoria"
       required
     >
-      <option value="">{{queryCategoria['nombre']}}</option>
+      <option value="">Seleccione categoria</option>
       {% for categoria in listaCategorias %}
-      <option value="{{categoria['_id']}}">{{categoria['nombre']}}</option>
+      <option value="{{categoria.id}}">{{categoria.nombre}}</option>
       {% endfor %}
     </select>
   </div>
