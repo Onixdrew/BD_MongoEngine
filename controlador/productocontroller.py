@@ -1,15 +1,18 @@
+import urllib.parse
 from aplicacion import app
 from flask import render_template,request,jsonify,redirect,url_for,session
-import yagmail
+# import yagmail
 import os
 from bson.objectid import ObjectId
 import base64
 from io import BytesIO
 from pymongo.errors import PyMongoError
 import threading
+import json
+import urllib.request
 
 # importo el modelo (..para salir de la carpeta actual)
-from model import usuarios, categorias,productos
+from models.model import usuarios, categorias,productos
  
 # Nota: diccionario(python) = Objeto(javaScript)
      
@@ -57,59 +60,77 @@ def inicioLogin():
     mensaje = ''
     emailLogin = request.form["correo"]
     password = request.form["contraseña"]
+    # hago una busqueda
     user=usuarios.objects()
     Productos=productos.objects()
     listCategorias=categorias.objects()
     
-
-    try:
-        for u in user:
-            converContraseña= str(u.contraseña)
-            
-            # se valida si el usuario existe en la base de datos 
-            if u.correo == emailLogin and converContraseña == password:
-                
-                # se crea la variable de la sesion
-                session['user']=emailLogin
-                
-                # cambia la variable estado para que renderice la pagina listarProductos
-                estado = True
-                mensaje = f'Bienvenid@ {u.nombre}'
-                
-                #////////// Enviar correo///////////////
-                
-                email=yagmail.SMTP(emailLogin, password, encoding='UTF-8')
-                asunto='Reporte ingreso al sistema'
-                mensajeCorreo=f'Me permito informar que el usuario <b>{u['nombre']}</b> ha ingresado al sistema'
-                # se envia un correo a la persona que ingresa a la app
-                # email.send(to=emailLogin, subject=asunto, contents=mensajeCorreo)
-                
-                # ////////////// Enviar correo con thread para enviar en eparalelo/////////////
-                
-                # def enviarCorreo(email=None, destinatario=None, asunto=None, mensajeCorreo=None):
-                #     email.send(to=emailLogin, subject=asunto, contents=mensaje)
-                
-                # la funcion thread permite realizar operaciones en paralelo, resive una funcion a realizar y los argumentos
-                # thread=threading,thread(target=enviarCorreo, args=(email,emailLogin,asunto,mensajeCorreo))
-                # thread.start()
-                
-                break  
     
-        if Productos:
-            mensaje2='Tus productos'
-        else:
-            mensaje2='No tienes productos'
-            
-        if estado:
-            return render_template('listarProductos.html', mensaje=mensaje,mensaje2=mensaje2, Productos=Productos, listCategorias=listCategorias)
-        else:
-            mensaje2 = 'Correo o contraseña incorrectos'
+    # validacion recapcha
+                    # se pasa el nombre de la clase + -response(obligatorio)
+    recaptcha= request.form["g-recaptcha-response"]
+    url='https://www.google.com/recaptcha/api/siteverify'
+    values={
+        "secret":"6LfXILcpAAAAAPgF9nJ-M253D-qND-vJjgcj7rTS",
+        "response":recaptcha
+    }
+    
+    data=urllib.parse.urlencode(values).encode()
+    req=urllib.request.Request(url, data=data)
+    response=urllib.request.urlopen(req)
+    result=json.loads(response.read().decode())
+
+    if result['success']:
+        try:
+            for u in user:
+                converContraseña= str(u.contraseña)
+                
+                # se valida si el usuario existe en la base de datos 
+                if u.correo == emailLogin and converContraseña == password:
+                    
+                    # se crea la variable de la sesion
+                    session['user']=emailLogin
+                    
+                    # cambia la variable estado para que renderice la pagina listarProductos
+                    estado = True
+                    mensaje = f'Bienvenid@ {u.nombre}'
+                    
+                    #////////// Enviar correo///////////////
+                    
+                    # email=yagmail.SMTP(emailLogin, password, encoding='UTF-8')
+                    # asunto='Reporte ingreso al sistema'
+                    # mensajeCorreo=f'Me permito informar que el usuario <b>{u['nombre']}</b> ha ingresado al sistema'
+                    # se envia un correo a la persona que ingresa a la app
+                    # email.send(to=emailLogin, subject=asunto, contents=mensajeCorreo)
+                    
+                    # ////////////// Enviar correo con thread para enviar en eparalelo/////////////
+                    
+                    # def enviarCorreo(email=None, destinatario=None, asunto=None, mensajeCorreo=None):
+                    #     email.send(to=emailLogin, subject=asunto, contents=mensaje)
+                    
+                    # la funcion thread permite realizar operaciones en paralelo, resive una funcion a realizar y los argumentos
+                    # thread=threading,thread(target=enviarCorreo, args=(email,emailLogin,asunto,mensajeCorreo))
+                    # thread.start()
+                    
+                    break  
         
+            if Productos:
+                mensaje2='Tus productos'
+            else:
+                mensaje2='No tienes productos'
+                
+            if estado:
+                return render_template('listarProductos.html', mensaje=mensaje,mensaje2=mensaje2, Productos=Productos, listCategorias=listCategorias)
+            else:
+                mensaje2 = 'Correo o contraseña incorrectos'
             
-    except PyMongoError as error:
-        mensaje2=error
-        
-    return redirect(url_for('inicio', mensaje2=mensaje2))
+                
+        except PyMongoError as error:
+            mensaje2=error
+            
+        return redirect(url_for('inicio', mensaje2=mensaje2))
+    else:
+        return redirect(url_for('inicio', mensaje2='Debe Validar primero el recaptcha'))
 
 
 

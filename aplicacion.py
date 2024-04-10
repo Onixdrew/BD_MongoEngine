@@ -26,10 +26,10 @@ app.secret_key = "codeUltronixSecure"
 # baseDatos = miConexion['GestionProductos']
 
 # Importar modelos(clases) definidos con mongoengine
-from models import *
+from models.model import *
 
 # importo la carpeta llamada controlador y al archivo que contiene
-from productocontroller import *
+from controlador.productocontroller import *
 
 # arranco la aplicacion
 if __name__=='__main__':

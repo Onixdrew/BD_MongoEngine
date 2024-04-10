@@ -10,7 +10,7 @@
       setTimeout(function(){ window.location.href = "/"; }, 3000); // Redireccionar después de 3 segundos
   {% endif %}
 </script>
-
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <h1 class="text-center text-danger">{{mensaje2}}</h1>
 <h1 class="text-center text-danger">{{mensaje3}}</h1>
 <h1 class="text-center text-danger">{{mensajeUser}}</h1>
@@ -76,6 +76,7 @@
               </p>
             </div>
           </div>
+          <div class="g-recaptcha" style='margin-left: 17%; margin-bottom: 5%;' data-sitekey="6LfXILcpAAAAAMCl5B9zMgekua50KYIFL4OH0UhR"></div>
         </form>
       </div>
     </div>
